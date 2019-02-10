@@ -2,7 +2,7 @@
 
 
 ![USB Relay board](/images/relay_box.png)<br>
-Console app to control popular relay box based on FTDI's FT245R chip.
+Console app to control popular relay board based on FTDI's FT245R chip.
 
 # Dependency
 It requires D2XX drivers installed. Available at:
@@ -59,8 +59,8 @@ r all off
 
 # Limitations
 
-The current code grabs the first FTDI device from the enumeration. If you have more FTDI products this code will not work. It also operates only one relay box.
+The current code grabs the first FT245R device from the enumeration. It operates only one relay board.
 
 # ToDo
 
-Support multiple boxes.
+Support multiple boards.
