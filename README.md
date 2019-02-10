@@ -4,7 +4,7 @@
 ![USB Relay board](/images/relay_box.png)<br>
 Console app to control popular relay box based on FTDI's FT245R chip.
 
-#Dependency
+# Dependency
 It requires D2XX drivers installed. Available at:
 https://www.ftdichip.com/Drivers/D2XX.htm
 
