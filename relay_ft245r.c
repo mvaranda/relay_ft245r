@@ -35,11 +35,16 @@ https://osdn.net/projects/mingw/downloads/68260/mingw-get-setup.exe/
 #include <windows.h>
 #include "FTD2XX.H"
 
-#define USAGE \
+#define FT245R_DESCRIPTION "FT245R USB FIFO"
+
+#define HELLO \
 "\nRelay FT245R - ver 0.01\n\
 source: https://github.com/mvaranda/relay_ft245r\n\
-Copyright (c) 2019 Marcelo Varanda - MIT License\n\n\
-Menu:\n\
+Copyright (c) 2019 Marcelo Varanda - MIT License\n\n"
+
+
+#define USAGE \
+"\nMenu:\n\
    r N on|off    - where N is the relay number (1~8) or \'all\'\n\
    list          - show all FTDI devices\n\
    quit          - quit this app\n\
@@ -103,7 +108,57 @@ static FT_STATUS openDevice (int devIdx, FT_HANDLE * ftHandle)
   FT_STATUS ftStatus;
   UCHAR Mask = 0xFF; // all output (output (1) and input (0)) 
   UCHAR Mode = 0x01; // 0x01 = asynchronous bit-bang
-  ftStatus = FT_Open(0, ftHandle);
+
+  FT_DEVICE_LIST_INFO_NODE *devInfo = NULL;
+  DWORD numDevs;
+  DWORD i;
+
+  // create the device information list 
+  int status = FT_CreateDeviceInfoList(&numDevs);
+
+  if (status != FT_OK) {
+    printf("FT_CreateDeviceInfoList status not ok %d\n", status);
+    return status;
+  }
+  
+  if (devIdx >= numDevs) {
+    printf("FT245R not found\n");
+    return -1;
+  }
+  
+
+  printf("Number of FTDI devices is %d\n", (int) numDevs);
+
+  // allocate storage for list based on numDevs 
+  devInfo =
+    (FT_DEVICE_LIST_INFO_NODE*)malloc(sizeof(FT_DEVICE_LIST_INFO_NODE)*numDevs);
+  // get the device information list 
+  status = FT_GetDeviceInfoList(devInfo, &numDevs);
+  if (status == FT_OK) {
+    for (i = 0; i < numDevs; i++) {
+      // printf("Dev %d:\n", (int) i);
+      // printf("Flags=0x%x\n", (int) devInfo[i].Flags);
+      // printf("Type=0x%x\n", (int) devInfo[i].Type);
+      // printf("ID=0x%x\n", (int) devInfo[i].ID);
+      // printf("LocId=0x%x\n", (int) devInfo[i].LocId);
+      // printf("SerialNumber=%s\n", devInfo[i].SerialNumber);
+      // printf("Description=%s\n", devInfo[i].Description);
+      // printf("\n");
+      if (strcmp(devInfo[i].Description, FT245R_DESCRIPTION) == 0) {
+        printf("found FT245R at idx = %d, Serial Number: %s\n", (int) i, devInfo[i].SerialNumber);
+        break;
+      }
+    }
+  }
+
+  free(devInfo);
+  
+  if (i >= numDevs) {
+    printf("Could not find any FT245R device\n");
+    return -2;
+  }
+
+  ftStatus = FT_Open(i, ftHandle);
   ftStatus |= FT_SetUSBParameters(*ftHandle, 4096, 4096); // Set USB transfer sizes
   ftStatus |= FT_SetChars(*ftHandle, 0, 0, 0, 0); // Disable event characters
   ftStatus |= FT_SetTimeouts(*ftHandle, 5000, 5000); // Set read/write timeouts to 5 sec
@@ -196,7 +251,7 @@ int main()
   DWORD data_written; // number of bytes written
   int quitoff = 0;
   
-  printUsage();
+  printf(HELLO);
     
   ftStatus = openDevice(0, &ftHandle);
   if (ftStatus != FT_OK) {
@@ -204,6 +259,8 @@ int main()
     return 0;
   }
 
+  printUsage();
+  
   while(1) {
     parseInput();
     if (num_par == 0) {
