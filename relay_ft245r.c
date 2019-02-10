@@ -24,6 +24,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+/*
+https://osdn.net/projects/mingw/releases/
+https://osdn.net/projects/mingw/downloads/68260/mingw-get-setup.exe/
+
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
@@ -190,6 +196,8 @@ int main()
   DWORD data_written; // number of bytes written
   int quitoff = 0;
   
+  printUsage();
+    
   ftStatus = openDevice(0, &ftHandle);
   if (ftStatus != FT_OK) {
     printf("openDevice fail, code: %d\n", (int) ftStatus); //check for error
