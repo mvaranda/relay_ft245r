@@ -1,4 +1,7 @@
 # relay_ft245r
+
+
+![USB Relay board](/images/relay_box.png)<br>
 Console app to control popular relay box based on FTDI's FT245R chip.
 
 Dependency: requires D2XX drivers installed. Available at:
@@ -21,6 +24,18 @@ Open a DOS console and "cd" to where you cloned this project. Then add MinGW int
 cd <where_you_clonned>
 path=C:\MinGW\bin;%path%
 ```
+
+### Codeblocks (an IDE with MinGW32 integrated)
+another option is to install Codeblocks:
+http://codeblocks.org/
+
+Default path would be different, use:
+```
+cd <where_you_clonned>
+path=c:\Program Files (x86)\CodeBlocks\MinGW\bin;%path%
+```
+
+### Compile/link
 
 then just run the batch file: build.bat
 ```
