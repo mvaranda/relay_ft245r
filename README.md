@@ -7,6 +7,9 @@ Console app to control popular relay box based on FTDI's FT245R chip.
 Dependency: requires D2XX drivers installed. Available at:
 https://www.ftdichip.com/Drivers/D2XX.htm
 
+# Precompiled binary
+relay_ft245r.exe is available to run. Just connect a unique relay board and run it. Use "help" or "?" to see the menu. Also, see "Run" and "Limitation" sessions below.
+
 # Build
 Compiled with MinGW (original 32bits version). MinGW64 did not work even forcing -m32 option.
 
